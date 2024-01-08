@@ -1,11 +1,9 @@
 import 'dart:developer';
-
 import 'package:chat_app/models/weatherModel.dart';
 import 'package:chat_app/services/weatherService.dart';
 import 'package:chat_app/style/color_manager.dart';
 import 'package:chat_app/style/fonts.dart';
 import 'package:chat_app/style/image.dart';
-import 'package:chat_app/view/weatherScreeb.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
