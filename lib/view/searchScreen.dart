@@ -1,11 +1,9 @@
-import 'dart:developer';
-import 'package:chat_app/models/weatherModel.dart';
-import 'package:chat_app/services/weatherService.dart';
+import 'package:chat_app/cubit/get_weather_cubit/get_weather_cubit.dart';
 import 'package:chat_app/style/color_manager.dart';
 import 'package:chat_app/style/fonts.dart';
 import 'package:chat_app/style/image.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -81,7 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                             filled: true,
                             hintText: "Enter City Name",
-                            hintStyle: TextStyle(fontSize: 20),
+                            hintStyle: const TextStyle(fontSize: 20),
                             fillColor: ColorManager.semiTransparentBlue,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -100,14 +98,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          weatherModel = await WeatherService(Dio())
-                              .getCurrentWeather(
-                                  cityName: searchController.text);
-                          log(weatherModel!.cityName);
+                          var getWeatherCuibt =
+                              BlocProvider.of<GetWeatherCubit>(context);
+                          getWeatherCuibt.getWeather(
+                              cityName: searchController.text);
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFCFF0FF),
+                          backgroundColor: const Color(0xFFCFF0FF),
                           minimumSize: const Size(150, 50),
                           maximumSize: const Size(150, 50),
                           elevation: 5,
@@ -117,13 +115,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         child: Text(
                           "Search",
-                          style: townFont.copyWith(color: Color(0xFF7E435C)),
+                          style:
+                              townFont.copyWith(color: const Color(0xFF7E435C)),
                         ),
                       ),
                     ],
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),
@@ -132,5 +131,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-
-WeatherModel? weatherModel;
