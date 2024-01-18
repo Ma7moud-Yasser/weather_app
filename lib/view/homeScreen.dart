@@ -1,3 +1,4 @@
+import 'package:chat_app/components/errorMessage.dart';
 import 'package:chat_app/cubit/get_weather_cubit/get_weather_cubit.dart';
 import 'package:chat_app/cubit/get_weather_cubit/get_weather_state.dart';
 import 'package:chat_app/style/image.dart';
@@ -22,16 +23,22 @@ class _HomeScreenState extends State<HomeScreen> {
         const Image(
             image: AssetImage(WeatherAssets.background), fit: BoxFit.cover),
         SafeArea(
-          child: BlocBuilder<GetWeatherCubit, WeatherState>(
-            builder: (context, state) {
-              if (state is InitialWeatherState) {
-                return const NoWeatherScreen();
-              } else if (state is WeatherLoadedState) {
-                return const WeatherScreen();
-              } else {
-                return const Text(
-                    "Oops There Was an Error , Please Try Later ");
+          child: BlocConsumer<GetWeatherCubit, WeatherState>(
+            listener: (context, state) {
+              if (state is WeatherFailureState) {
+                return showErrorToast("Enter Valid City Name");
               }
+            },
+            builder: (context, state) {
+              if (state is WeatherSuccessState) {
+                return const WeatherScreen();
+              } else if (state is WeatherLoadingState) {
+                return const Center(
+                    child: CircularProgressIndicator.adaptive(
+                  backgroundColor: Colors.red,
+                ));
+              }
+              return const NoWeatherScreen();
             },
           ),
         ),

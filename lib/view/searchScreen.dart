@@ -1,4 +1,6 @@
+import 'package:chat_app/components/errorMessage.dart';
 import 'package:chat_app/cubit/get_weather_cubit/get_weather_cubit.dart';
+import 'package:chat_app/cubit/get_weather_cubit/get_weather_state.dart';
 import 'package:chat_app/style/color_manager.dart';
 import 'package:chat_app/style/fonts.dart';
 import 'package:chat_app/style/image.dart';
@@ -14,6 +16,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchController = TextEditingController();
+  bool isInputValid(String input) {
+    return input.isNotEmpty && input.trim().isNotEmpty && input != "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +48,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back_ios_new_outlined),
-                      color: Colors.black,
+                      color: const Color.fromARGB(255, 215, 8, 8),
                     ),
                   ),
                 ),
@@ -73,13 +78,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           decoration: InputDecoration(
                             contentPadding:
                                 const EdgeInsets.symmetric(vertical: 20),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.search,
-                              color: Colors.grey[700],
+                              color: Color.fromARGB(255, 215, 8, 8),
                             ),
                             filled: true,
                             hintText: "Enter City Name",
-                            hintStyle: const TextStyle(fontSize: 20),
+                            hintStyle: const TextStyle(
+                                fontSize: 20, color: Colors.white),
                             fillColor: ColorManager.semiTransparentBlue,
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -98,14 +104,21 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          var getWeatherCuibt =
-                              BlocProvider.of<GetWeatherCubit>(context);
-                          getWeatherCuibt.getWeather(
-                              cityName: searchController.text);
-                          Navigator.pop(context);
+                          var getWeatherCubit = GetWeatherCubit.get(context);
+                          // BlocProvider.of<GetWeatherCubit>(context);
+
+                          if (isInputValid(searchController.text)) {
+                            getWeatherCubit.getWeather(
+                                cityName: searchController.text);
+                            Navigator.pop(context);
+                          } else {
+                            // Show a toast message for invalid input
+                            showErrorToast("Please enter a valid city name");
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFCFF0FF),
+                          backgroundColor: const Color(
+                              0xFFCFF0FF), // Adjust the disabled color as needed
                           minimumSize: const Size(150, 50),
                           maximumSize: const Size(150, 50),
                           elevation: 5,
@@ -113,10 +126,21 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        child: Text(
-                          "Search",
-                          style:
-                              townFont.copyWith(color: const Color(0xFF7E435C)),
+                        child: BlocConsumer<GetWeatherCubit, WeatherState>(
+                          listener: (context, state) {},
+                          builder: (context, state) {
+                            if (state is WeatherLoadingState) {
+                              return const Center(
+                                  child: CircularProgressIndicator.adaptive());
+                            } else {
+                              return Text(
+                                "Search",
+                                style: townFont.copyWith(
+                                    color:
+                                        const Color.fromARGB(255, 215, 8, 8)),
+                              );
+                            }
+                          },
                         ),
                       ),
                     ],

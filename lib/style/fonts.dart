@@ -6,6 +6,11 @@ TextStyle mainFont = GoogleFonts.cabin(
   color: Colors.black,
   fontWeight: FontWeight.bold,
 );
+TextStyle secondFont = GoogleFonts.cabin(
+  fontSize: 25,
+  color: Colors.black,
+  fontWeight: FontWeight.w500,
+);
 TextStyle townFont = GoogleFonts.cabin(
   fontSize: 20,
   color: Colors.black,
@@ -14,6 +19,6 @@ TextStyle townFont = GoogleFonts.cabin(
 TextStyle inputFont = GoogleFonts.cabin(
   fontSize: 20,
   // color: Color(0xff086725a),
-  color: Color(0xFF7E435C),
+  color: const Color.fromARGB(255, 215, 8, 8),
   fontWeight: FontWeight.w500,
 );
